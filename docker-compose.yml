@@ -1,0 +1,8 @@
+version: '3.8'
+
+services:
+  varoascii:
+    build: .
+    image: varoascii:latest
+    stdin_open: true
+    tty: true
