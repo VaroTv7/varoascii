@@ -94,9 +94,13 @@ class NeonConfig(BaseConfig):
 
 def _dim_color(color: Color, factor: float) -> Color:
     """Dim a color by a factor (0.0 = black, 1.0 = original)."""
-    hex_str = str(color)
-    # Extract RGB from the color — handle both with and without #
-    clean = hex_str.lstrip("#")
+    # The Color object in this engine has an 'rgb_color' attribute which is the hex string
+    clean = color.rgb_color if hasattr(color, "rgb_color") else str(color).lstrip("#")
+    if "Color" in clean: # Fallback if str() was used
+        import re
+        match = re.search(r"[0-9a-fA-F]{6}", clean)
+        if match:
+            clean = match.group(0)
     if len(clean) < 6:
         clean = clean.ljust(6, "0")
     r = int(int(clean[0:2], 16) * factor)

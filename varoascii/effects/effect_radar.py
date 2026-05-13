@@ -155,7 +155,12 @@ class RadarIterator(BaseEffectIterator[RadarConfig]):
                 base_brightness = hit_factor / self.config.sweep_count
 
                 final_color = self.character_final_colors[character]
-                hex_clean = str(final_color).lstrip("#")
+                hex_clean = final_color.rgb_color if hasattr(final_color, "rgb_color") else str(final_color).lstrip("#")
+                if "Color" in hex_clean:
+                    import re
+                    match = re.search(r"[0-9a-fA-F]{6}", hex_clean)
+                    if match:
+                        hex_clean = match.group(0)
                 if len(hex_clean) < 6:
                     hex_clean = hex_clean.ljust(6, "0")
                 r = int(int(hex_clean[0:2], 16) * brightness)
@@ -172,7 +177,12 @@ class RadarIterator(BaseEffectIterator[RadarConfig]):
                 if hits > 0:
                     afterglow = 0.15 + (hits / self.config.sweep_count) * 0.4
                     final_color = self.character_final_colors[character]
-                    hex_clean = str(final_color).lstrip("#")
+                    hex_clean = final_color.rgb_color if hasattr(final_color, "rgb_color") else str(final_color).lstrip("#")
+                    if "Color" in hex_clean:
+                        import re
+                        match = re.search(r"[0-9a-fA-F]{6}", hex_clean)
+                        if match:
+                            hex_clean = match.group(0)
                     if len(hex_clean) < 6:
                         hex_clean = hex_clean.ljust(6, "0")
                     r = int(int(hex_clean[0:2], 16) * afterglow)
