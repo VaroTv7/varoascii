@@ -7,6 +7,7 @@ from varoascii.effects.effect_blackhole import Blackhole
 from varoascii.effects.effect_bouncyballs import BouncyBalls
 from varoascii.effects.effect_bubbles import Bubbles
 from varoascii.effects.effect_burn import Burn
+from varoascii.effects.effect_cinema import Cinema
 from varoascii.effects.effect_colorshift import ColorShift
 from varoascii.effects.effect_crumble import Crumble
 from varoascii.effects.effect_decrypt import Decrypt
@@ -14,14 +15,17 @@ from varoascii.effects.effect_errorcorrect import ErrorCorrect
 from varoascii.effects.effect_expand import Expand
 from varoascii.effects.effect_fireworks import Fireworks
 from varoascii.effects.effect_glitch import Glitch
+from varoascii.effects.effect_hack import Hack
 from varoascii.effects.effect_highlight import Highlight
 from varoascii.effects.effect_laseretch import LaserEtch
 from varoascii.effects.effect_matrix import Matrix
 from varoascii.effects.effect_middleout import MiddleOut
+from varoascii.effects.effect_neon import Neon
 from varoascii.effects.effect_orbittingvolley import OrbittingVolley
 from varoascii.effects.effect_overflow import Overflow
 from varoascii.effects.effect_pour import Pour
 from varoascii.effects.effect_print import Print
+from varoascii.effects.effect_radar import Radar
 from varoascii.effects.effect_rain import Rain
 from varoascii.effects.effect_random_sequence import RandomSequence
 from varoascii.effects.effect_rings import Rings

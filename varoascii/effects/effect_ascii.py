@@ -56,7 +56,7 @@ def _load_font(font_name: str) -> Figlet:
 
     if local_font_file.exists():
         try:
-            return Figlet(font=str(local_font_file))
+            return Figlet(font=font_name, dir=str(local_dir))
         except Exception:
             pass
 

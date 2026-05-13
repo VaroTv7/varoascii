@@ -59,16 +59,7 @@ def render(
         figlet = _load_font(font)
         text = figlet.renderText(text.strip())
 
-    # Discover effects
-    effect_map = {}
-    for module_info in pkgutil.iter_modules(
-        varoascii.effects.__path__,
-        varoascii.effects.__name__ + ".",
-    ):
-        module = importlib.import_module(module_info.name)
-        if hasattr(module, "get_effect_resources"):
-            cmd, effect_cls, config_cls = module.get_effect_resources()
-            effect_map[cmd] = (effect_cls, config_cls)
+    effect_map = _discover_effects()
 
     if effect not in effect_map:
         available = ", ".join(sorted(effect_map.keys()))
@@ -89,3 +80,102 @@ def render(
     with effect_instance.terminal_output() as terminal:
         for frame in effect_instance:
             terminal.print(frame)
+
+
+def render_to_string(
+    text: str,
+    effect: str = "print",
+    theme: str | None = None,
+    font: str | None = None,
+) -> str:
+    """Render text with an effect and return the final frame as a string.
+
+    Same as render(), but returns the last frame instead of printing.
+
+    Args:
+        text: The text to process.
+        effect: Name of the effect.
+        theme: Optional color theme name.
+        font: Optional FIGlet font name.
+
+    Returns:
+        str: The final rendered frame as an ANSI string.
+    """
+    if font:
+        from varoascii.effects.effect_ascii import _load_font
+        figlet = _load_font(font)
+        text = figlet.renderText(text.strip())
+
+    effect_map = _discover_effects()
+    if effect not in effect_map:
+        available = ", ".join(sorted(effect_map.keys()))
+        raise ValueError(f"Effect '{effect}' not found. Available: {available}")
+
+    effect_cls, config_cls = effect_map[effect]
+    from varoascii.engine.terminal import TerminalConfig
+    terminal_config = TerminalConfig._build_config()
+    effect_config = config_cls._build_config()
+
+    if theme:
+        from varoascii.themes import get_theme
+        theme_colors = get_theme(theme)
+        if hasattr(effect_config, "final_gradient_stops"):
+            effect_config.final_gradient_stops = theme_colors
+
+    effect_instance = effect_cls(text, effect_config, terminal_config)
+    last_frame = ""
+    for frame in effect_instance:
+        last_frame = frame
+    return last_frame
+
+
+def list_effects() -> list[str]:
+    """Return a sorted list of all available effect names.
+
+    Returns:
+        list[str]: Effect command names (e.g. ["ascii", "burn", "cinema", ...]).
+    """
+    return sorted(_discover_effects().keys())
+
+
+def list_themes() -> list[str]:
+    """Return a sorted list of all available color theme names.
+
+    Returns:
+        list[str]: Theme names (e.g. ["arctic", "blood", "cyberpunk", ...]).
+    """
+    from varoascii.themes import get_theme_names
+    return get_theme_names()
+
+
+# --- Internal ---
+
+_effect_cache: dict | None = None
+
+
+def _discover_effects() -> dict:
+    """Discover and cache all available effects.
+
+    Returns:
+        dict: Mapping of effect name -> (effect_class, config_class).
+    """
+    global _effect_cache
+    if _effect_cache is not None:
+        return _effect_cache
+
+    import importlib
+    import pkgutil
+    import varoascii.effects
+
+    effect_map = {}
+    for module_info in pkgutil.iter_modules(
+        varoascii.effects.__path__,
+        varoascii.effects.__name__ + ".",
+    ):
+        module = importlib.import_module(module_info.name)
+        if hasattr(module, "get_effect_resources"):
+            cmd, effect_cls, config_cls = module.get_effect_resources()
+            effect_map[cmd] = (effect_cls, config_cls)
+
+    _effect_cache = effect_map
+    return effect_map

@@ -61,6 +61,33 @@ THEMES: dict[str, tuple[Color, ...]] = {
         Color("daa520"),  # goldenrod
         Color("b8860b"),  # dark goldenrod
     ),
+    "vapor": (
+        Color("ff71ce"),  # pink
+        Color("01cdfe"),  # blue
+        Color("05ffa1"),  # mint
+        Color("b967ff"),  # purple
+    ),
+    "terminal": (
+        Color("33ff00"),  # phosphor green
+        Color("20cc00"),  # medium green
+        Color("0a6600"),  # dark green
+    ),
+    "blood": (
+        Color("8b0000"),  # dark red
+        Color("dc143c"),  # crimson
+        Color("4a0000"),  # very dark red
+    ),
+    "pastel": (
+        Color("ffb3ba"),  # pastel pink
+        Color("bae1ff"),  # pastel blue
+        Color("baffc9"),  # pastel green
+        Color("ffffba"),  # pastel yellow
+    ),
+    "monochrome": (
+        Color("ffffff"),  # white
+        Color("aaaaaa"),  # gray
+        Color("555555"),  # dark gray
+    ),
 }
 
 

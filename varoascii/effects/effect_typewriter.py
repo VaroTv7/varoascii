@@ -220,9 +220,11 @@ class TypewriterIterator(BaseEffectIterator[TypewriterConfig]):
 
                 self._type_character(character)
 
-                # Pause on spaces
+                # Pause on spaces (but not if all remaining chars are also spaces)
                 if character.input_symbol == " ":
-                    self.pause_frames = self.config.pause_on_space
+                    has_non_space = any(c.input_symbol.strip() for c in self.pending)
+                    if has_non_space:
+                        self.pause_frames = self.config.pause_on_space
 
             # Show cursor at next position if there are more characters
             if self.pending:
