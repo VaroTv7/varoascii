@@ -15,6 +15,7 @@ from typing import TYPE_CHECKING
 
 import varoascii.effects
 from varoascii.engine.terminal import Terminal, TerminalConfig
+from varoascii.themes import THEMES, get_theme, get_theme_names
 from varoascii.utils.exceptions import UnsupportedAnsiSequenceError
 from varoascii.utils.shell_completion import SUPPORTED_SHELLS, get_completion_script
 
@@ -42,9 +43,9 @@ def build_parser() -> tuple[argparse.ArgumentParser, dict[str, tuple[type[BaseEf
 
     """
     parser = argparse.ArgumentParser(
-        prog="tte",
-        description="A terminal visual effects engine, application, and library",
-        epilog="Ex: ls -a | tte decrypt --typing-speed 2 --ciphertext-colors 008000 00cb00 00ff00 "
+        prog="varoascii",
+        description="VaroASCII: Motor de efectos visuales y arte ASCII para terminal",
+        epilog="Ex: ls -a | varoascii decrypt --typing-speed 2 --ciphertext-colors 008000 00cb00 00ff00 "
         "--final-gradient-stops eda000 --final-gradient-steps 12 --final-gradient-direction vertical",
     )
 
@@ -61,6 +62,19 @@ def build_parser() -> tuple[argparse.ArgumentParser, dict[str, tuple[type[BaseEf
         help="Print a shell completion script for the requested shell and exit.",
     )
     parser.add_argument("--random-effect", "-R", action="store_true", help="Randomly select an effect to apply")
+    parser.add_argument(
+        "--theme",
+        "-t",
+        type=str,
+        choices=get_theme_names(),
+        default=None,
+        help="Apply a predefined color theme to the effect. Available: " + ", ".join(get_theme_names()),
+    )
+    parser.add_argument(
+        "--list-themes",
+        action="store_true",
+        help="List available color themes and exit.",
+    )
     parser.add_argument(
         "--seed",
         type=int,
@@ -175,6 +189,13 @@ def main() -> None:
         parser, _ = build_parser()
         print(get_completion_script(args.print_completion, parser), end="")
         return
+    if args.list_themes:
+        print("\n🎨 Temas de color disponibles:\n")
+        for name, colors in sorted(THEMES.items()):
+            hex_list = " ".join(f"#{c.color_value}" if hasattr(c, 'color_value') else str(c) for c in colors)
+            print(f"  {name:12s}  {hex_list}")
+        print("\nUso: varoascii --theme <nombre> <efecto>")
+        return
     if args.seed is not None:
         random.seed(args.seed)
     if args.input_file:
@@ -211,6 +232,11 @@ def main() -> None:
     effect_class, effect_config_class = effect_resource_map[args.effect]
     terminal_config = TerminalConfig._build_config(args)
     effect_config = effect_config_class._build_config(None if args.random_effect else args)
+    # Apply theme colors if specified
+    if args.theme:
+        theme_colors = get_theme(args.theme)
+        if hasattr(effect_config, "final_gradient_stops"):
+            effect_config.final_gradient_stops = theme_colors
     effect = effect_class(input_data, effect_config, terminal_config)
     try:
         with effect.terminal_output() as terminal:

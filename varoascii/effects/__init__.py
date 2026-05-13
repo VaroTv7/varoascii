@@ -13,6 +13,7 @@ from varoascii.effects.effect_decrypt import Decrypt
 from varoascii.effects.effect_errorcorrect import ErrorCorrect
 from varoascii.effects.effect_expand import Expand
 from varoascii.effects.effect_fireworks import Fireworks
+from varoascii.effects.effect_glitch import Glitch
 from varoascii.effects.effect_highlight import Highlight
 from varoascii.effects.effect_laseretch import LaserEtch
 from varoascii.effects.effect_matrix import Matrix
@@ -34,6 +35,7 @@ from varoascii.effects.effect_swarm import Swarm
 from varoascii.effects.effect_sweep import Sweep
 from varoascii.effects.effect_synthgrid import SynthGrid
 from varoascii.effects.effect_thunderstorm import Thunderstorm
+from varoascii.effects.effect_typewriter import Typewriter
 from varoascii.effects.effect_unstable import Unstable
 from varoascii.effects.effect_vhstape import VHSTape
 from varoascii.effects.effect_waves import Waves

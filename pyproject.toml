@@ -1,6 +1,6 @@
 [project]
 name = "varoascii"
-version = "1.0.0-varo"
+version = "1.0.0"
 description = "VaroASCII: The Ultimate Terminal ASCII Art & Visual Effects Engine (Fork of TerminalTextEffects)"
 authors = [{ name = "VaroTv7", email = "varo@example.com" }]
 requires-python = ">=3.8"
